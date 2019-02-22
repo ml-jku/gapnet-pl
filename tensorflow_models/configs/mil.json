@@ -1,0 +1,49 @@
+{
+  "specs": "MIL",
+  "cuda_gpu": "0",
+  "architecture": "architectures.MIL",
+  "a": 5,
+  "optimizer": "MomentumOptimizer",
+  "optimizer_params": {
+    "learning_rate": 1e-2,
+    "momentum": 0.9
+  },
+  "lrs": {
+    "type": "plateau",
+    "patience": 30,
+    "factor": 0.5,
+    "threshold": 0.01,
+    "mode": "max"
+  },
+  "dataset": {
+    "num_classes": 13,
+    "reader": "datasets.ProteinLoc",
+    "train": {
+      "data_directory_path": "../npzs",
+      "label_file": "../labels_train.txt",
+      "transforms": [
+        "torchvision.transforms.ToPILImage('CMYK')",
+        "torchvision.transforms.RandomCrop((1024,1024))",
+        "torchvision.transforms.ToTensor()",
+        "pyll.transforms.NormalizeByImage()"
+      ]
+    },
+    "val": {
+      "data_directory_path": "../npzs",
+      "label_file": "../labels_val.txt",
+      "transforms": [
+        "torchvision.transforms.ToPILImage('CMYK')",
+        "torchvision.transforms.ToTensor()",
+        "pyll.transforms.NormalizeByImage()"
+      ],
+      "patching": true,
+      "patch_size": 1024
+    }
+  },
+  "l1": 1e-7,
+  "l2": 1e-5,
+  "epochs": 500,
+  "batchsize": 32,
+  "max_checkpoints": 300,
+  "working_dir": "../working_dir"
+}
