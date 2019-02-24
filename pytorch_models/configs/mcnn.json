@@ -1,0 +1,59 @@
+{
+  "name": "MCNN",
+  "workspace": "../working_dir",
+  "workspacedebug": "../working_dir/debug",
+  "dataset": {
+    "reader": "datasets.ProteinLoc",
+    "num_classes": 13,
+    "data_directory_path": "../npzs",
+    "train": {
+      "label_file": "../labels_train.txt",
+      "transforms": [
+        "torchvision.transforms.ToPILImage('CMYK')",
+        "torchvision.transforms.RandomCrop((1024,1024))",
+        "torchvision.transforms.ToTensor()",
+        "pyll.transforms.NormalizeByImage()"
+      ]
+    },
+    "val": {
+      "label_file": "../labels_val.txt",
+      "transforms": [
+        "torchvision.transforms.ToPILImage('CMYK')",
+        "torchvision.transforms.ToTensor()",
+        "pyll.transforms.NormalizeByImage()"
+      ],
+      "patching": true,
+      "patch_size": 1024
+    }
+  },
+  "initial_val": true,
+  "optimizer": "import::torch.optim.SGD",
+  "optimizer_params": {
+    "lr": 1e-1,
+    "momentum": 0.9
+  },
+  "schedule_lr": true,
+  "lr_scheduler": {
+    "patience": 30,
+    "factor": 0.5,
+    "threshold": 0.01,
+    "mode": "max"
+  },
+  "regularization": {
+    "l1": 1e-7,
+    "l2": 1e-5
+  },
+  "clip_grad_norm": {
+    "max_norm": 5,
+    "norm_type": 2
+  },
+  "model": "models.MCNN",
+  "training": {
+    "epochs": 500,
+    "batchsize": 22
+  },
+  "validation": {
+    "validation_step": null,
+    "batchsize": 1
+  }
+}
