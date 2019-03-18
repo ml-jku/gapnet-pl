@@ -14,6 +14,9 @@ url={https://openreview.net/forum?id=ryl5khRcKm},
 
 # Dataset
 The dataset with individual samples in NPZ-format is available for download here: https://ml.jku.at/software/pLoc/dataset
+A similar dataset was analyzed during a Kaggle challenge: https://www.kaggle.com/c/human-protein-atlas-image-classification
+One of the gold medal winners (Wienerschnitzelgemeinschaft) used an architecture based on GapNet as described here:
+https://www.kaggle.com/c/human-protein-atlas-image-classification/discussion/77300
 
 # Instructions
 
