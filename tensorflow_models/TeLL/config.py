@@ -8,7 +8,7 @@ Default configuration settings
 import json
 import os
 
-from TeLL.utility.misc import import_object, extract_named_args, try_to_number, parse_args
+from TeLL.utility.misc import import_object, extract_named_args, try_to_number_or_bool, parse_args
 
 
 class Config(object):
@@ -82,7 +82,7 @@ class Config(object):
             override = extract_named_args(override_args)
             for k, v in override.items():
                 name = k[2:] if "--" in k else k  # remove leading --
-                value = v if v.startswith('"') or v.startswith("'") else try_to_number(v)
+                value = v if v.startswith('"') or v.startswith("'") else try_to_number_or_bool(v)
                 if "." in name:
                     names = name.split(".")
                     name = names[0]

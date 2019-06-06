@@ -162,10 +162,10 @@ def main(_):
     # LOAD WEIGHTS and get list of trainables if specified
     assign_loaded_variables = None
     trainables = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES)
-    if config.get_value("load_weights", None) is not None:
-        with Timer(name="Loading Weights", verbose=True):
-            assign_loaded_variables, trainables = tell.load_weights(config.get_value("load_weights", None),
-                                                                    config.get_value("freeze", True),
+    if config.get_value("checkpoint", None) is not None:
+        with Timer(name="Loading Checkpoint", verbose=True):
+            assign_loaded_variables, trainables = tell.load_weights(config.get_value("checkpoint", None),
+                                                                    config.get_value("freeze", False),
                                                                     config.get_value("exclude_weights", None),
                                                                     config.get_value("exclude_freeze", None))
     
@@ -188,6 +188,11 @@ def main(_):
         n_mbs = len(train_loader)
         epoch = int((step * batchsize) / (n_mbs * batchsize))
         epochs = range(epoch, n_epochs)
+        
+        if len(trainables) == 0:
+            validate(val_loader, n_classes, session, loss_val, prediction_val, model,
+                     workspace, step, batchsize, tell)
+            return
         
         print("Epoch: {}/{} (step: {}, nmbs: {}, batchsize: {})".format(epoch + 1, n_epochs, step, n_mbs, batchsize))
         for ep in epochs:
@@ -221,10 +226,12 @@ def main(_):
                 for mbi, mb in enumerate(train_loader):
                     # LRS "Plateu"
                     if lrs_plateu:
-                        feed_dict = {model.X: mb['input'].numpy(), model.y_: mb['target'].numpy(), model.dropout: dropout,
+                        feed_dict = {model.X: mb['input'].numpy(), model.y_: mb['target'].numpy(),
+                                     model.dropout: dropout,
                                      learning_rate: lrs_learning_rate}
                     else:
-                        feed_dict = {model.X: mb['input'].numpy(), model.y_: mb['target'].numpy(), model.dropout: dropout}
+                        feed_dict = {model.X: mb['input'].numpy(), model.y_: mb['target'].numpy(),
+                                     model.dropout: dropout}
                     
                     # TRAINING
                     pred, loss_train, _ = session.run([prediction, loss, update], feed_dict=feed_dict)

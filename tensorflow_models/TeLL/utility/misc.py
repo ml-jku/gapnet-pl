@@ -293,13 +293,15 @@ def extract_unnamed_args(arglist):
     return result
 
 
-def try_to_number(value):
+def try_to_number_or_bool(value):
     try:
         value = int(value)
     except ValueError:
         try:
             value = float(value)
         except ValueError:
+            if isinstance(value, str) and (value.lower() == "false" or value.lower() == "true"):
+                value = (value.lower() == "true")
             pass
     return value
 
