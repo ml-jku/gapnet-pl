@@ -39,3 +39,9 @@ Parameters from the configuration files can also be overwritten from the command
 ```
 python main.py --config <configfile> --cuda_gpu <gpu-id> --num_workers <number of dataloading threads> --batchsize <bs>
 ```
+
+## Load Weights
+
+```
+python main.py --config configs/gapnet-pl.json --checkpoint <model-dir>/gapnet-pl.ckpt --freeze <True/False> 
+```
